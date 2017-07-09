@@ -1,0 +1,45 @@
+---
+- hosts: vernemq
+  remote_user: ubuntu
+  become: true
+  vars:
+    dockerfile_path: /home/ubuntu/vernemq     
+  
+  tasks:
+    - name: ensure repository key is installed
+      apt_key:
+        id: "58118E89F3A912897C070ADBF76221572C52609D"
+        keyserver: "hkp://p80.pool.sks-keyservers.net:80"
+        state: present
+
+    - name: ensure docker registry is available
+      # For Ubuntu 14.04 LTS, use this repository:
+      apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' state=present
+
+    - name: ensure docker and dependencies are installed
+      apt: name=docker-engine update_cache=yes
+
+    # Uncomment the following to enable insecure registries with Docker
+    #- name: ensure docker can use insecure registries in 10.11.0.0/16
+    #  lineinfile: "dest=/etc/default/docker regexp=^DOCKER_OPTS line=DOCKER_OPTS='--insecure-registry 10.11.0.0/16'"
+
+    - service: name=docker state=restarted
+#
+#    - name: create directory for docker file
+#      file:
+#        path: "{{dockerfile_path}}"
+#        state: directory
+
+    #copy docker file
+#    - name: copy dockerfile
+#      copy:
+#        src: ../vernemq/Dockerfile
+#        dest: "{{dockerfile_path}}Dockerfile"
+#        mode: 0644
+
+#    - name: build docker image
+#      command: "docker build -t jenkins {{dockerfile_path}}"
+
+    - name: run docker image
+      command: docker run -e "DOCKER_VERNEMQ_ALLOW_ANONYMOUS=on" -p 1883:1883 --name vernemq -d erlio/docker-vernemq
+
