@@ -1,2 +1,5 @@
 [workload_clients]
 172.31.7.73
+
+[vernemq]
+172.31.7.159

@@ -1,0 +1,24 @@
+---
+- hosts: workload_clients
+  remote_user: ubuntu
+  sudo: true
+  tasks:
+   
+  - file:
+      path: /home/ubuntu/workload_generation   
+      state: directory
+      mode: 0755
+
+  - name: copy files
+    copy:
+      src: "../workload_generation/{{ item }}" 
+      dest: "/home/ubuntu/workload_generation"
+      mode: 0777
+    with_items:
+    - "client_publish_message.sh"
+    - "run_clients.sh"
+    - "Dockerfile"
+
+  - name: install mosquito client 
+    apt: name=mosquitto-clients update_cache=yes
+

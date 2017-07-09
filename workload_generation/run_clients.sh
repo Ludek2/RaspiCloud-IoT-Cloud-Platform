@@ -4,9 +4,18 @@ echo "run_clients script executed"
 client_exec_file_path=$1
 number_of_executions=$2
 
-for i in `seq 1 $number_of_executions`;
-    do
-        echo "execution number $i"
-        $client_exec_file_path $i
-    done
-
+if [ $number_of_executions -ne "-1" ]
+then
+  for i in `seq 1 $number_of_executions`;
+      do
+          echo "execution number $i"
+          $client_exec_file_path $i
+      done
+else  
+  COUNTER=0
+  while [ 1 ]; do
+    echo The counter is $COUNTER
+    let COUNTER=COUNTER+1 
+    sleep 0.2
+  done
+fi

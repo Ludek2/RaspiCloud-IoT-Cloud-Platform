@@ -1,0 +1,10 @@
+---
+- hosts: workload_clients
+  remote_user: ubuntu
+  sudo: true
+  tasks:
+
+  - name: run workload script
+    shell: /bin/bash /home/ubuntu/workload_generation/run_clients.sh /home/ubuntu/workload_generation/client_publish_message.sh 1000 > /home/ubuntu/workload_generation/run_clients_log.log
+#    async: 10
+#    poll: 0
