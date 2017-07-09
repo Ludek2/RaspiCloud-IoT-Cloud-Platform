@@ -1,0 +1,45 @@
+---
+- hosts: workload_clients
+  remote_user: ubuntu
+  sudo: true
+  tasks:
+   
+  - file:
+      path: /home/ubuntu/workload_generation   
+      state: directory
+      mode: 0755
+
+  - name: copy files
+    copy:
+      src: "../workload_generation/{{ item }}" 
+      dest: "/home/ubuntu/workload_generation"
+      mode: 0644
+    with_items:
+    - "client_publish_message.sh"
+    - "run_clients.sh"
+    - "Dockerfile"
+
+#taken from: https://getintodevops.com/blog/installing-docker-on-ubuntu-with-ansible
+  - name: ensure repository key is installed
+    apt_key:
+        id: "58118E89F3A912897C070ADBF76221572C52609D"
+        keyserver: "hkp://p80.pool.sks-keyservers.net:80"
+        state: present
+
+  - name: ensure docker registry is available
+    # For Ubuntu 14.04 LTS, use this repository:
+    apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' state=present
+    # For Ubuntu 16.04 LTS, use this repo instead:
+    # apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-xenial main' state=present
+
+  - name: ensure docker and dependencies are installed
+    apt: name=docker-engine update_cache=yes
+
+    # Uncomment the following to enable insecure registries with Docker
+    #- name: ensure docker can use insecure registries in 10.11.0.0/16
+    #  lineinfile: "dest=/etc/default/docker regexp=^DOCKER_OPTS line=DOCKER_OPTS='--insecure-registry 10.11.0.0/16'"
+
+  - service: name=docker state=restarted 
+  
+  - name: build docker image
+    command: docker build -t mqtt_client_workload_1 /home/ubuntu/workload_generation/
