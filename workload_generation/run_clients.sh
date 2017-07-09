@@ -14,7 +14,7 @@ then
 else  
   COUNTER=0
   while [ 1 ]; do
-    echo The counter is $COUNTER
+    $client_exec_file_path $COUNTER
     let COUNTER=COUNTER+1 
     sleep 0.2
   done
