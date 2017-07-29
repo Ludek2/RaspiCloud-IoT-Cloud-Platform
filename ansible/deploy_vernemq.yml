@@ -1,7 +1,7 @@
 ---
 - hosts: vernemq
   remote_user: ubuntu
-  become: true
+  sudo: yes 
   vars:
     dockerfile_path: /home/ubuntu/vernemq     
   
