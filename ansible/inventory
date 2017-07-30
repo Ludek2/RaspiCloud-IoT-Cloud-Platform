@@ -4,4 +4,11 @@
 [vernemq]
 172.31.15.244
 
+[zookeeper]
+172.31.11.149
 
+[kafka]
+172.31.1.26
+
+[mqtt_kafka_adapter]
+172.31.11.160
