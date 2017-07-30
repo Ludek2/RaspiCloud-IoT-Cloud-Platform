@@ -1,17 +1,14 @@
 package mqtt_kafka_adapter;
 
-import java.io.IOException;
-
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-
 public class main {
 
 	public static void main(String[] args) {
-		new Mqtt_subscribe().doDemo();
+		Mqtt_client mqttCl = new Mqtt_client();
+		mqttCl.start_consumer(); 
+		mqttCl.publish("here we go");
+		
+		new kafka_producer();
+		
 		
 	/*
 	    String topic        = "MQTT Examples";
