@@ -6,10 +6,38 @@
     zookeeper_path: kafka/kafka_2.11-0.11.0.0
   tasks:
 
-  - file:
-      path: /home/ubuntu/kafka
-      state: directory
-      mode: 0755
+  - name: update system packages
+    action:
+      module: apt
+      update_cache: yes
+      cache_valid_time: 3600
+      upgrade: dist
+      force: yes
+
+  - name : install  packages
+    action:
+      module : apt
+      update_cache: yes
+     # name : "{{ item }}"
+      name: supervisor
+      state: present
+      force: yes
+   # with_items : packages
+
+  - name: Copy supervisor config file
+    action:
+      module: copy
+      src: ../templates/supervisor/supervisord.conf
+      dest: /etc/supervisor/supervisord.conf
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Restart supervisor service
+    action:
+      module: service
+      name: supervisor
+      state: restarted
 
   - name: Copy kafka folder
     synchronize: src=../{{item}}  dest=/home/ubuntu/
@@ -39,8 +67,6 @@
       - oracle-java8-installer
       - oracle-java8-set-default
 
-  - name: Run Zookeeper - fire and forget
+  - name: start kafka
     become: yes
-    shell: "{{zookeeper_path}}/bin/zookeeper-server-start.sh {{zookeeper_path}}/config/zookeeper.properties"
-    async: 10
-    poll: 0 
+    shell: supervisorctl start zookeeper
