@@ -10,8 +10,10 @@ import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 public class Mqtt_client implements MqttCallback{
 
 		MqttClient client;
+		Event_handler event_handl;
 
-		public Mqtt_client() {
+		public Mqtt_client(Event_handler eh) {
+			this.event_handl = eh;
 			try {
 				client = new MqttClient("tcp://35.177.223.189:1883", "Sending");
 				client.connect();
@@ -52,7 +54,8 @@ public class Mqtt_client implements MqttCallback{
 		@Override
 		public void messageArrived(String topic, MqttMessage message)
 		        throws Exception {
-		 System.out.println(message);   
+		   System.out.println("mqtt_msg received:" + message);
+		   event_handl.mqtt_msg_received(message.toString());
 		}
 
 		@Override

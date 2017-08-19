@@ -3,11 +3,13 @@ package mqtt_kafka_adapter;
 public class main {
 
 	public static void main(String[] args) {
-		Mqtt_client mqttCl = new Mqtt_client();
+		
+		kafka_producer kp = new kafka_producer();
+		Event_handler event_handl= new Event_handler(kp);
+		
+		Mqtt_client mqttCl = new Mqtt_client(event_handl);
 		mqttCl.start_consumer(); 
 		mqttCl.publish("here we go");
-		
-		new kafka_producer();
 		
 		
 	/*
