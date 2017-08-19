@@ -67,6 +67,6 @@
       - oracle-java8-installer
       - oracle-java8-set-default
 
-  - name: start kafka
+  - name: start zookeeper
     become: yes
     shell: supervisorctl start zookeeper
