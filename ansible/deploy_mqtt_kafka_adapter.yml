@@ -1,13 +1,46 @@
 ---
 - hosts: mqtt_kafka_adapter
   remote_user: ubuntu
-  sudo: true
-  vars: 
-    kafka_client_path: kafka/kafka_2.11-0.11.0.0
+  sudo: yes
+  vars:
+    packages:
+      - supervisor
   tasks:
+  - name: update system packages
+    action:
+      module: apt
+      update_cache: yes
+      cache_valid_time: 3600
+      upgrade: dist
+      force: yes
 
-  - name: Copy kafka folder
-    synchronize: src=../{{item}}  dest=/home/ubuntu/
+  - name : install  packages
+    action:
+      module : apt
+      update_cache: yes
+     # name : "{{ item }}"
+      name: supervisor
+      state: present
+      force: yes
+   # with_items : packages
+
+  - name: Copy supervisor config file
+    action:
+      module: copy
+      src: ../templates/supervisor/supervisord.conf
+      dest: /etc/supervisor/supervisord.conf
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Restart supervisor service
+    action:
+     module: service
+     name: supervisor
+     state: restarted
+
+  - name: Copy mqtt_kafka_adapter binary file
+    synchronize: src=../../mqtt_to_kafka.jar  dest=/home/ubuntu/
     with_items:
       - "kafka"
 
@@ -34,8 +67,6 @@
       - oracle-java8-installer
       - oracle-java8-set-default
 
-#  - name: Run Zookeeper - fire and forget
-#    become: yes
-#    shell: "{{kafka_client_path}}/bin/zookeeper-server-start.sh {{kafka_client_path}}/config/zookeeper.properties"
-#    async: 10
-#    poll: 0
+  - name: start mqtt_to_kafka
+    become: yes
+    shell: supervisorctl start mqtt_kafka_adapter
