@@ -35,9 +35,6 @@ public class Kafka_consumer {
 	           ConsumerRecords<String, String> records = consumer.poll(1000);
 	           for (ConsumerRecord<String, String> record : records) {
 	               System.out.printf("Received Message topic =%s, partition =%s, offset = %d, key = %s, value = %s\n", record.topic(), record.partition(), record.offset(), record.key(), record.value());
-	               
-	               //Document doc = new Document("receivedValue", record.value());	         
-	               //collection.insertOne(doc);
 	               String msg=record.value();
 	               eh.msg_received(msg);
 	           }
