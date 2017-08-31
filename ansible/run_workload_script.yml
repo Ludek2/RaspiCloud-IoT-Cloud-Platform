@@ -5,7 +5,11 @@
   tasks:
 
   - name: run workload script , async value is the time out - the run_clients.sh script will stop work after this time 
-    shell: /bin/bash /home/ubuntu/workload_generation/run_clients.sh /home/ubuntu/workload_generation/client_publish_message.sh -1
-#    shell: /bin/bash /home/ubuntu/workload_generation/run_clients.sh /home/ubuntu/workload_generation/client_publish_message.sh  > /home/ubuntu/workload_generation/run_clients_log.log
-    async: 10
+    sudo: true
+#    shell: /bin/bash /home/ubuntu/workload_generation/run_clients.sh /home/ubuntu/workload_generation/client_publish_message.sh -1
+    shell: /home/ubuntu/workload_generation/run_clients.sh /home/ubuntu/workload_generation/client_publish_message.sh -1 &> /home/ubuntu/workload_generation/run_clients_log.log
+    async: 600
     poll: 0
+    args:
+       chdir: /home/ubuntu/workload_generation/ 
+

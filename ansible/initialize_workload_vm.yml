@@ -17,7 +17,7 @@
     with_items:
     - "client_publish_message.sh"
     - "run_clients.sh"
-    - "Dockerfile"
+    - "dataSet.csv"
 
   - name: install mosquito client 
     apt: name=mosquitto-clients update_cache=yes
