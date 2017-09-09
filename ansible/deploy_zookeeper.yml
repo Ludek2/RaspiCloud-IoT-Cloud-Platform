@@ -37,7 +37,8 @@
     action:
       module: service
       name: supervisor
-      state: restarted
+      state: started
+    #ignore_errors: true
 
   - name: Copy kafka folder
     synchronize: src=../{{item}}  dest=/home/ubuntu/
@@ -70,3 +71,68 @@
   - name: start zookeeper
     become: yes
     shell: supervisorctl start zookeeper
+
+  - name : install git package
+    action:
+      module : apt
+      update_cache: yes
+      name: git
+      state: present
+      force: yes
+  
+  - name: clone LinkedIn Burrow repository 
+    git:
+      repo: https://github.com/linkedin/Burrow.git
+      dest: /home/ubuntu/burrow/
+      clone: yes
+ 
+  - name: create /etc/burrow/ directory
+    file: 
+       path: /etc/burrow/ 
+       mode: 0755 
+       state: directory
+
+  - name: create /var/log/burrow/ directory
+    file: 
+       path: /var/log/burrow/ 
+       mode: 0755 
+       state: directory
+  
+  - name: Copy burrow config file
+    action:
+      module: copy
+      src: ../templates/burrow/burrow.cfg
+      dest: /etc/burrow/burrow.cfg
+      owner: root
+      group: root
+      mode: 0644 
+ 
+  - name: Copy burrow logging config file
+    action:
+      module: copy
+      src: ../templates/burrow/logging.cfg
+      dest: /etc/burrow/logging.cfg
+      owner: root
+      group: root
+      mode: 0644 
+  
+  - name: ensure repository key is installed
+    apt_key:
+      id: "58118E89F3A912897C070ADBF76221572C52609D"
+      keyserver: "hkp://p80.pool.sks-keyservers.net:80"
+      state: present
+
+  - name: ensure docker registry is available
+    # For Ubuntu 14.04 LTS, use this repository:
+    apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' state=present
+
+  - name: ensure docker and dependencies are installed
+    apt: name=docker-engine update_cache=yes
+
+  - service: name=docker state=restarted
+
+  - name: pull burrow docker image
+    command: 'docker pull magnetme/burrow' 
+
+  - name: run burrow docker container
+    command: "docker run  -d -v /etc/burrow:/etc/burrow -p 8000:8000 magnetme/burrow"
