@@ -136,3 +136,28 @@
 
   - name: run burrow docker container
     command: "docker run  -d -v /etc/burrow:/etc/burrow -p 8000:8000 magnetme/burrow"
+
+  - name : install  packages
+    action:
+      module : apt
+      update_cache: yes
+      name: jq 
+      state: present
+      force: yes
+
+  - name: Copy monitoring/kafka_total_lag.sh 
+    action:
+      module: copy
+      src: ../monitoring/kafka_total_lag.sh
+      dest: /opt/kafka_total_lag.sh
+      owner: root
+      group: root
+      mode: 0755
+ 
+  - name: reread supervisor config file
+    become: yes
+    shell: supervisorctl reread
+ 
+  - name: start monitoring/kafka_total_lag.sh
+    become: yes
+    shell: supervisorctl start kafka-total-lag-monitoring
