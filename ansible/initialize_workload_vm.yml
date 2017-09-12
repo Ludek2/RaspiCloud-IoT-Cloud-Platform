@@ -22,3 +22,9 @@
   - name: install mosquito client 
     apt: name=mosquitto-clients update_cache=yes
 
+  - name: install ntp
+    action:
+      module: apt
+      package: ntp
+      state: present
+
