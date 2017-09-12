@@ -1,0 +1,47 @@
+---
+- hosts: microservice
+  remote_user: ubuntu
+  sudo: yes
+  vars:
+    microservice_files_location: microservices/docker_microservice/  
+    dockerfile_microservice_path: /home/ubuntu/
+  
+  tasks:
+  - name: Copy docker_microservice folder
+    synchronize: src=../{{item}}  dest={{dockerfile_microservice_path}}
+    with_items:
+      - "{{microservice_files_location}}"
+
+  - name: ensure repository key is installed
+    apt_key:
+      id: "58118E89F3A912897C070ADBF76221572C52609D"
+      keyserver: "hkp://p80.pool.sks-keyservers.net:80"
+      state: present
+
+  - name: ensure docker registry is available
+    # For Ubuntu 14.04 LTS, use this repository:
+    apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main' state=present
+
+  - name: ensure docker and dependencies are installed
+    apt: name=docker-engine update_cache=yes
+
+    # Uncomment the following to enable insecure registries with Docker
+    #- name: ensure docker can use insecure registries in 10.11.0.0/16
+    #  lineinfile: "dest=/etc/default/docker regexp=^DOCKER_OPTS line=DOCKER_OPTS='--insecure-registry 10.11.0.0/16'"
+
+  - service: name=docker state=restarted
+
+  - name: Stop docker container if exists
+    command: docker stop microservice
+    ignore_errors: true
+
+  - name: Remove docker container if exists
+    command: docker rm microservice
+    ignore_errors: true
+
+  - name: build docker image
+    command: "docker build -t microservice {{dockerfile_microservice_path}}"
+ 
+  - name: run microservice docker image
+    command: docker run --name microservice -d microservice
+
