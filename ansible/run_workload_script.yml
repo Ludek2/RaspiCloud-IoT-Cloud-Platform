@@ -8,7 +8,7 @@
     sudo: true
 #    shell: /bin/bash /home/ubuntu/workload_generation/run_clients.sh /home/ubuntu/workload_generation/client_publish_message.sh -1
     shell: /home/ubuntu/workload_generation/run_clients.sh /home/ubuntu/workload_generation/client_publish_message.sh -1 &> /home/ubuntu/workload_generation/run_clients_log.log
-    async: 10 
+    async: 100
     poll: 0
     args:
        chdir: /home/ubuntu/workload_generation/ 
