@@ -12,3 +12,11 @@
 
 [mqtt_kafka_adapter]
 172.31.11.160
+
+[database_mongoDB]
+172.31.4.26
+
+[microservice]
+172.31.14.135
+
+
