@@ -2,13 +2,9 @@ package pullService;
 
 import static spark.Spark.*;
 
-import java.util.Set;
-
 public class PullService {
 
 	public static void main(String[] args) {
-		Mongo_iot_db mongo = new Mongo_iot_db();
-		mongo.getAllIotMessages();
 		get("/hello", (req, res) -> "Hello World");
 
 		get("/", (request, response) -> {

@@ -1,18 +1,11 @@
 package pullService;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.bson.Document;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
@@ -34,11 +27,15 @@ public class Mongo_iot_db {
 		MongoCursor<Document> cursor = collection.find().iterator();
 		while (cursor.hasNext()) {
 			Document doc = cursor.next();
-			String id = doc.getObjectId("_id").toString();
+			//String id = doc.getObjectId("_id").toString();
+			String id = doc.getString("_id");
 			//System.out.println(id);
 			Long sent_from_microservice_time = Long.parseLong(doc.getString("sent_from_microservice_time"));
 			Long sent_from_iot_device_time = Long.parseLong(doc.getString("sent_from_iot_device_time"));
-			msgs.add(new mongo_iot_message(id, sent_from_microservice_time, sent_from_iot_device_time));
+			//convert dbReceivedMessageTime from s to ms
+			//Long dbReceivedMessageTime = (long)doc.getObjectId("_id").getTimestamp() * 1000;
+			Long dbReceivedMessageTime = doc.getDate("received_by_db_time").getTime();
+			msgs.add(new mongo_iot_message(id, sent_from_microservice_time, sent_from_iot_device_time,dbReceivedMessageTime));
 		}
 	    getJsonFromMsgSet(msgs);
 		return msgs;
@@ -50,7 +47,6 @@ public class Mongo_iot_db {
 		for(mongo_iot_message msg : msgs){
 			msgsList.add(msg.toJson());
 		}
-		//json += jsonList.toString() + "}";
 		messagesObj.put("messages", msgsList);
 		return messagesObj.toString();
 	}

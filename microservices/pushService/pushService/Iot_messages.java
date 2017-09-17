@@ -36,11 +36,12 @@ public class Iot_messages {
 			String id = msg.get("id").toString();
 			long sent_from_iot_device_time = Long.parseLong(msg.get("sent_from_iot_device_time").toString());
 			long sent_from_microservice_time = Long.parseLong(msg.get("sent_from_microservice_time").toString());
-			msgs.add(new pg_iot_message(id, sent_from_microservice_time, sent_from_iot_device_time));
+			long db_received_message_time = Long.parseLong(msg.get("db_received_message_time").toString());
+			msgs.add(new pg_iot_message(id, sent_from_microservice_time, sent_from_iot_device_time,
+					db_received_message_time));
 		}
 		// System.out.println(jsonArray);
 		return msgs;
 	}
-	
-	
+
 }

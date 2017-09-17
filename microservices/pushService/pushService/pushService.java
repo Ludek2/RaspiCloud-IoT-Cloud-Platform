@@ -22,8 +22,7 @@ public class pushService {
 			//get set of pg_iot_message instances
 			Set<pg_iot_message> msgsSet = new Iot_messages(messagesJson).getMsgsSet();;			
 			for(pg_iot_message msg : msgsSet){
-				System.out.println(msg.getId());
-				db.saveMessage(msg.getId(), msg.getSent_from_microservice_time(), msg.getSent_from_iot_device_time());
+				db.saveMessage(msg.getId(), msg.getSent_from_microservice_time(), msg.getSent_from_iot_device_time(), msg.getDb_received_message_time());
 			}
 			
 			//response to http get call

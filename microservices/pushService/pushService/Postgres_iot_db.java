@@ -38,13 +38,14 @@ public class Postgres_iot_db {
 		}
 	}
 
-	public int saveMessage(String id, long sent_from_microservice_time, long sent_from_iot_device_time) {
-		String stm = "INSERT INTO iot_messages(id, sent_from_microservice_time, sent_from_iot_device_time) VALUES(?, ?, ?)";
+	public int saveMessage(String id, long sent_from_microservice_time, long sent_from_iot_device_time, long db_received_message_time) {
+		String stm = "INSERT INTO iot_messages(id, sent_from_microservice_time, sent_from_iot_device_time, db_received_message_time) VALUES(?, ?, ?, ?)";
 		try {
 			pst = con.prepareStatement(stm);
 			pst.setString(1, id);
 			pst.setLong(2, sent_from_microservice_time);
 			pst.setLong(3, sent_from_iot_device_time);
+			pst.setLong(4, db_received_message_time);
 			pst.executeUpdate();
 			return 1;
 		} catch (SQLException e) {
