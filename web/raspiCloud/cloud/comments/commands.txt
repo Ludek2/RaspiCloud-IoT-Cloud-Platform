@@ -1,0 +1,7 @@
+from cloud.models import ChartWidget
+
+ChartWidget.objects.all().delete()
+
+all=ChartWidget.objects.all()
+
+for ch in all: print ch.pk

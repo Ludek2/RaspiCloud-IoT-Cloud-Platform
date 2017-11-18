@@ -1,0 +1,21 @@
+.google-visualization-charteditor-dialog {
+    height: auto !important;
+    width: auto !important;
+}
+
+.google-visualization-charteditor-dialog .goog-flat-menu-button {
+    height: auto !important;
+}
+
+.google-visualization-charteditor-name-input {
+    height: auto !important;
+}
+
+.google-visualization-charteditor-preview-td {
+    top: auto !important;
+}
+
+.goog-toolbar-combo-caption-gecko
+{
+    margin-top: 0 !important;
+}

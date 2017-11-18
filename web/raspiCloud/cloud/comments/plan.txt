@@ -1,0 +1,6 @@
+- populate charts with data interactively
+- database
+- api for IoT device (send data to the database)
+- integrate data comming from IoT device with the web application
+- user accounts and sessions
+- improve chart customization
