@@ -45,3 +45,26 @@
     - name: run docker image
       command: docker run -e "DOCKER_VERNEMQ_ALLOW_ANONYMOUS=on" -p 1883:1883 --name vernemq -d erlio/docker-vernemq
 
+    - name: install https apt transport
+      apt: name=apt-transport-https state=present
+
+    - name: Add dataloop gpg key
+      apt_key: id=113E2B8D url='https://download.dataloop.io/pubkey.gpg' state=present
+
+    - name: Add dataloop apt repository
+      apt_repository: repo='deb https://download.dataloop.io/deb/ stable main' state=present
+
+    - name: Install dataloop
+      apt: name=dataloop-agent state=present
+
+    - name: Copy Outlyer config file
+      template: src=../templates/outlyer/mqtt_client/agent.yaml dest=/etc/dataloop/agent.yaml owner=root group=dataloop mode=640
+    notify: restart dataloop-agent
+
+    - service:
+        name: dataloop-agent
+        state: stopped
+
+    - service:
+        name: dataloop-agent
+        state: started

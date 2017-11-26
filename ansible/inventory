@@ -21,3 +21,7 @@
 
 [postgres]
 localhost
+
+[ecs]
+172.31.1.234
+

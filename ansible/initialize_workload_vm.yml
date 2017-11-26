@@ -39,3 +39,11 @@
 
   - name: Install dataloop
     apt: name=dataloop-agent state=present
+
+  - name: Copy Outlyer config file
+    template: src=../templates/outlyer/mqtt_client/agent.yaml dest=/etc/dataloop/agent.yaml owner=root group=dataloop mode=640
+    notify: restart dataloop-agent
+
+  - service:
+      name: dataloop-agent
+      state: restarted

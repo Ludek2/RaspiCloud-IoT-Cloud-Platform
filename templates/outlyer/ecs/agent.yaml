@@ -1,0 +1,26 @@
+---
+##
+## Set to yes to disable RPC and run plugins from local plugin source
+solo: no
+
+## Set to enable docker container discovery and monitoring
+## dataloop user will need to be added to docker group to access the socket
+docker: no
+
+## Set to yes to create lots of logs
+debug: no
+
+## The dataloop api key
+api-key: a31f82d7-7b69-4ffe-a2a1-d8de61b1e814 
+
+##  set tags to a comma separated list of tags applied to this agent
+tags: ecs_instance
+
+## Set if you would like a custom name for this agent. Default is hostname
+name: ecs_instance_{{ ansible_eth0.ipv4.address }}
+
+## Set writeable directory, if default install location is not used
+# datadir:
+
+## Set finger file to writeable location, if default is not used
+# ffile:

@@ -1,0 +1,29 @@
+---
+- hosts: ecs
+  remote_user: ec2-user
+  sudo: true
+  tasks:  
+
+  - name: Install libselinux-python
+    yum: name=libselinux-python
+
+  - name: Add the dataloop repo to the system
+    copy: src=../templates/outlyer/ecs/dataloop.repo dest=/etc/yum.repos.d/dataloop.repo owner=root group=root mode=0644
+
+  - name: Import Dataloop package signing gpg key
+    rpm_key: state=present key=https://download.dataloop.io/pubkey.gpg
+
+  - name: Install dataloop
+    yum: name=dataloop-agent state=present
+  
+  - name: Copy Outlyer config file
+    template: src=../templates/outlyer/ecs/agent.yaml dest=/etc/dataloop/agent.yaml owner=root group=dataloop mode=640
+    notify: restart dataloop-agent
+
+  - service:
+      name: dataloop-agent
+      state: stopped
+
+  - service:
+      name: dataloop-agent
+      state: started
