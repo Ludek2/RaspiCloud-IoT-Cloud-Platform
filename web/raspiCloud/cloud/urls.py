@@ -26,4 +26,7 @@ urlpatterns = [
 
     #music/get_saved_json/
     url(r'^get_saved_json/$', views.get_saved_json, name='get_saved_json'),
+
+    #music/get_saved_json/
+    url(r'^get_json_metrics/$', views.get_json_metrics, name='get_saved_json'),
 ]

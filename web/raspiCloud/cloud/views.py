@@ -154,3 +154,32 @@ def save_json(request):
 
 def get_saved_json(request):
 	return HttpResponse(json_saved.data, content_type='application/json')
+
+
+def get_json_metrics(request):
+	  data =[{"year":2001, "value": 0},
+	  		  	  {"year":2002, "value": random.randint(0, 100)},
+	  		      {"year":2003, "value": 10},
+	  		      {"year":2004, "value": random.randint(0, 100)},
+	  		      {"year":2005, "value": random.randint(0, 100)},
+	  		      {"year":2006, "value": random.randint(0, 100)},
+	  		      {"year":2007, "value": random.randint(0, 100)},
+	  		      {"year":2008, "value": random.randint(0, 100)},
+	  		      {"year":2009, "value": random.randint(0, 100)},
+	  		      {"year":2010, "value": random.randint(0, 100)},
+	  		      {"year":2011, "value": random.randint(0, 100)},]
+	  # Creating the data
+	  description = {"year": ("number", "Year"),
+	  				 "value": ("number", "Value")}
+	  # Loading it into gviz_api.DataTable
+	  data_table = gviz_api.DataTable(description)
+	  data_table.LoadData(data)
+
+	  # Creating a JavaScript code string
+	  #jscode = data_table.ToJSCode("jscode_data",
+	                               #columns_order=("name", "salary", "full_time"),
+	                               #order_by="salary")
+	  # Creating a JSon string
+	  json = data_table.ToJSon(columns_order=("year", "value"))
+
+	  return HttpResponse(json, content_type='application/json')
