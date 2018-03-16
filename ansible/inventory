@@ -19,4 +19,9 @@
 [microservice]
 172.31.14.135
 
+[postgres]
+localhost
+
+[ecs]
+172.31.1.234
 

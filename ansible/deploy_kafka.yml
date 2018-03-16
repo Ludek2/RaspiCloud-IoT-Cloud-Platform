@@ -71,4 +71,45 @@
   - name: start kafka
     become: yes
     shell: supervisorctl start kafka_broker
-  
+ 
+  - name: install ntp
+    action:
+      module: apt
+      package: ntp
+      state: present
+
+  - name: install https apt transport
+    apt: name=apt-transport-https state=present
+
+  - name: Add dataloop gpg key
+    apt_key: id=113E2B8D url='https://download.dataloop.io/pubkey.gpg' state=present
+
+  - name: Add dataloop apt repository
+    apt_repository: repo='deb https://download.dataloop.io/deb/ stable main' state=present
+
+  - name: Install dataloop
+    apt: name=dataloop-agent state=present 
+
+  - name: install https apt transport
+    apt: name=apt-transport-https state=present
+
+  - name: Add dataloop gpg key
+    apt_key: id=113E2B8D url='https://download.dataloop.io/pubkey.gpg' state=present
+
+  - name: Add dataloop apt repository
+    apt_repository: repo='deb https://download.dataloop.io/deb/ stable main' state=present
+
+  - name: Install dataloop
+    apt: name=dataloop-agent state=present
+
+  - name: Copy Outlyer config file
+    template: src=../templates/outlyer/kafka/agent.yaml dest=/etc/dataloop/agent.yaml owner=root group=dataloop mode=640
+    notify: restart dataloop-agent
+
+  - service:
+      name: dataloop-agent
+      state: stopped
+
+  - service:
+      name: dataloop-agent
+      state: started
