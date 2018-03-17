@@ -1,1 +1,1 @@
-This is my dissertation project
+This is my dissertation project.
